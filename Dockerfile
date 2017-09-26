@@ -1,5 +1,5 @@
 FROM tiredofit/alpine:3.6
-MAINTAINER Dave Conroy <dave at tiredofit dot ca>
+LABEL maintainer="Dave Conroy (dave at tiredofit dot ca)"
 
 ### Disable Features from Base Image
    ENV ENABLE_CRON=FALSE \
