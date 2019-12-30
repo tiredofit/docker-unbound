@@ -1,5 +1,8 @@
 #!/usr/bin/with-contenv bash
 
+source /assets/functions/*
+PROCESS_NAME="unbound"
+
 ### Set Defaults
 DO_IPV6=${DO_IPV6:-yes}
 DO_IPV4=${DO_IPV4:-yes}
@@ -44,6 +47,4 @@ sed -i 's/{{STATISTICS_INTERVAL}}/'"${STATISTICS_INTERVAL}"'/' /etc/unbound/unbo
 sed -i 's/{{STATISTICS_CUMULATIVE}}/'"${STATISTICS_CUMULATIVE}"'/' /etc/unbound/unbound.conf
 sed -i 's/{{EXTENDED_STATISTICS}}/'"${EXTENDED_STATISTICS}"'/' /etc/unbound/unbound.conf
 
-mkdir -p /tmp/state
-touch /tmp/state/10-unbound-init  
-
+liftoff 

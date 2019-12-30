@@ -1,4 +1,4 @@
-FROM tiredofit/alpine:3.6
+FROM tiredofit/alpine:3.11
 LABEL maintainer="Dave Conroy (dave at tiredofit dot ca)"
 
 ### Disable Features from Base Image
@@ -6,16 +6,17 @@ LABEL maintainer="Dave Conroy (dave at tiredofit dot ca)"
        ENABLE_SMTP=FALSE
 
 ### Install Dependencies
-   RUN apk update && \
+   RUN set -x && \
+       apk update && \
        apk add \
-           unbound && \
+           unbound \
+           && \
 
 ### Configure Unbound
        curl ftp://ftp.internic.net/domain/named.cache > /etc/unbound/root.hints
 
+### Networking Configuration
+   EXPOSE 53
 
 ### Add Files
    ADD install /
-
-### Networking Configuration
-   EXPOSE 53
