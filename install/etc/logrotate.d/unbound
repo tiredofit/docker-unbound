@@ -1,0 +1,9 @@
+<LOG_LOCATION><LOG_FILE> {
+    daily
+    ifempty
+    rotate 7
+    missingok
+    compress
+    copytruncate
+    dateext
+}

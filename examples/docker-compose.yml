@@ -1,41 +1,21 @@
-version: '2'
+version: '3.7'
 services:
 
   unbound-app:
-    container_name: unbound-app
-    restart: always
     image: tiredofit/unbound
+    container_name: unbound-app
     ports:
       - 53:53
+    volumes:
+      - ./config:/config
+      - ./logs:/logs
     environment:
-      - ZABBIX_HOSTNAME=unbound-hostname-app      
-    
-      - DO_IPV6=yes
-      - DO_IPV4=yes
-      - DO_UDP=yes
-      - DO_TCP=yes
-      - VERBOSITY=0
-      - NUM_THREADS=1
-      - SO_RCVBUFF=0
-      - SO_SNDBUF=0
-      - SO_REUSEPORT=no
-      - EDNS_BUFFER_SIZE=4096
-      - MSG_CACHE_SIZE=4m
-      - RRSET_CACHE_SIZE=4m
-      - CACHE_MIN_TTL=0
-      - CACHE_MAX_TTL=86400
-      - CACHE_MAX_NEGATIVE_TTL=3600
-      - HIDE_IDENTITY=no
-      - HIDE_VERSION=no
-      - STATISTICS_INTERVAL=0
-      - STATISTICS_CUMULATIVE=no
-      - EXTENDED_STATISTICS=no
+      - ZABBIX_HOSTNAME=unbound-hostname-app
     networks:
-      - proxy-tier
+      - services
     restart: always
 
 networks:
-  proxy-tier:
-    external:
-      name: nginx-proxy
+  services:
+    external: true
 

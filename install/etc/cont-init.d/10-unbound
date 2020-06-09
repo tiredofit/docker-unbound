@@ -1,28 +1,10 @@
 #!/usr/bin/with-contenv bash
 
-for s in /assets/functions/*; do source $s; done
+source /assets/functions/00-container
+prepare_service single
 PROCESS_NAME="unbound"
 
-### Adjust Runtime Variables
-sed -i 's/{{DO_IPV6}}/'"${DO_IPV6}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{DO_IPV4}}/'"${DO_IPV4}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{DO_UDP}}/'"${DO_UDP}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{DO_TCP}}/'"${DO_TCP}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{VERBOSITY}}/'"${VERBOSITY}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{NUM_THREADS}}/'"${NUM_THREADS}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{SO_RCVBUFF}}/'"${SO_RCVBUFF}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{SO_SNDBUF}}/'"${SO_SNDBUF}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{SO_REUSEPORT}}/'"${SO_REUSEPORT}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{EDNS_BUFFER_SIZE}}/'"${EDNS_BUFFER_SIZE}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{MSG_CACHE_SIZE}}/'"${MSG_CACHE_SIZE}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{RRSET_CACHE_SIZE}}/'"${RRSET_CACHE_SIZE}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{CACHE_MIN_TTL}}/'"${CACHE_MIN_TTL}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{CACHE_MAX_TTL}}/'"${CACHE_MAX_TTL}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{CACHE_MAX_NEGATIVE_TTL}}/'"${CACHE_MAX_NEGATIVE_TTL}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{HIDE_IDENTITY}}/'"${HIDE_IDENTITY}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{HIDE_VERSION}}/'"${HIDE_VERSION}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{STATISTICS_INTERVAL}}/'"${STATISTICS_INTERVAL}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{STATISTICS_CUMULATIVE}}/'"${STATISTICS_CUMULATIVE}"'/' /etc/unbound/unbound.conf
-sed -i 's/{{EXTENDED_STATISTICS}}/'"${EXTENDED_STATISTICS}"'/' /etc/unbound/unbound.conf
+configure_logging
+create_configuration
 
 liftoff 

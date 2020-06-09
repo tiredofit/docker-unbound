@@ -1,18 +1,128 @@
 #!/usr/bin/with-contenv bash
 
-### Set Defaults
-DO_IPV6=${DO_IPV6:-yes}
-DO_IPV4=${DO_IPV4:-yes}
-DO_UDP=${DO_UDP:-yes}
-DO_TCP=${DO_TCP:-yes}
-VERBOSITY=${VERBOSITY:-0}
-NUM_THREADS=${NUM_THREADS:-1}
-SO_RCVBUFF=${SO_RCVBUFF:-0}
-SO_SNDBUF=${SO_SNDBUF:-0}
-SO_REUSEPORT=${SO_REUSEPORT:-no}
-EDNS_BUFFER_SIZE=${EDNS_BUFFER_SIZE:-4096}
-MSG_CACHE_SIZE=${MSG_CACHE_SIZE:-4m}
-RRSET_CACHE_SIZE=${RRSET_CACHE_SIZE:-4m}
-CACHE_MIN_TTL=${CACHE_MIN_TTL:-0}
-CACHE_MAX_TTL=${CACHE_MAX_TTL:-86400}
-CACHE_MAX_NEGATIVE_TTL=
+create_configuration() {
+	if [ "$SETUP_TYPE" = "AUTO" ]; then
+
+        print_notice "Configuring Unbound"
+        mkdir -p ${CONFIG_PATH}conf.d
+        chown -R ${UNBOUND_USER} ${CONFIG_PATH}
+
+        if [ ! -f ${ROOT_HINTS} ] ; then
+            print_notice "Downloading Root Hints"
+            sudo -u ${UNBOUND_USER} curl ftp://ftp.internic.net/domain/named.cache > ${ROOT_HINTS}
+        else
+            if [[ $(find "$ROOT_HINTS" -mtime +30 -print) ]] ;  then
+                print_notice "Root Hints are older than 30 days - Refreshing"
+                sudo -u ${UNBOUND_USER} curl ftp://ftp.internic.net/domain/named.cache > ${ROOT_HINTS}
+            fi
+        fi
+
+        truefalse_yesno ENABLE_IPV4
+        truefalse_yesno ENABLE_IPV6
+        truefalse_yesno ENABLE_TCP
+        truefalse_yesno ENABLE_UDP
+        truefalse_yesno HARDEN_DNSSEC_STRIPPED
+        truefalse_yesno HARDEN_LARGE_QUERIES
+        truefalse_yesno HARDEN_SHORT_BUFFER_SIZE
+        truefalse_yesno MINIMAL_RESPONSES
+        truefalse_yesno NO_QUERY_LOCALHOST 
+        truefalse_yesno PREFETCH
+        truefalse_yesno RRSET_ROUNDROBIN
+        truefalse_yesno SO_REUSE_PORT
+        truefalse_yesno STATISTICS_CUMULATIVE
+        truefalse_yesno STATISTICS_EXTENDED
+
+		sudo -u ${UNBOUND_USER} cat << EOF > ${CONFIG_PATH}${CONFIG_FILE}
+## Custom Generated Unbound Configuration! Do not edit, instead set ENV Vars
+## If you want to use your own configuration files set SETUP_TYPE=MANUAL when starting container
+## Last Generated on `date`
+
+server:
+    cache-max-negative-ttl: ${CACHE_TTL_MAX_NEGATIVE}
+    cache-max-ttl: ${CACHE_TTL_MAX}
+    cache-min-ttl: ${CACHE_TTL_MIN}
+    do-ip4: ${ENABLE_IPV4}
+    do-ip6: ${ENABLE_IPV6}
+    do-not-query-localhost: ${NO_QUERY_LOCALHOST}
+    do-tcp: ${ENABLE_TCP}
+    do-udp: ${ENABLE_UDP}
+    edns-buffer-size: ${CACHE_SIZE_EDNS}
+    extended-statistics: ${STATISTICS_EXTENDED}
+    harden-dnssec-stripped: ${HARDEN_DNSSEC_STRIPPED}
+    harden-large-queries: ${HARDEN_LARGE_QUERIES}
+    harden-short-bufsize: ${HARDEN_SHORT_BUFFER_SIZE}
+    interface: ${LISTEN_IP}
+    logfile: "${logfile}"
+    minimal-responses: ${MINIMAL_RESPONSES}
+    msg-buffer-size: ${BUFFER_SIZE_MSG}
+    msg-cache-size: ${CACHE_SIZE_MSG}
+    msg-cache-slabs: ${CACHE_SLABS_MSG}
+    num-queries-per-thread: ${THREADS_QUERIES_PER}
+    outgoing-port-permit: "${ACCESS_CONTROL_OUTGOING_PORT_PERMIT}"
+    pidfile: "/var/run/unbound.pid"
+    port: ${LISTEN_PORT}
+    prefetch: ${PREFETCH}
+    root-hints: ${ROOT_HINTS}
+    rrset-roundrobin: ${RRSET_ROUNDROBIN}
+    so-reuseport: ${SO_REUSE_PORT}
+    statistics-cumulative: ${STATISTICS_CUMULATIVE}
+    statistics-interval: ${STATISTICS_INTERVAL}
+    target-fetch-policy: "${TARGET_FETCH_POLICY}"
+    trust-anchor: "${TRUST_ANCHOR}"
+    username: "${UNBOUND_USER}"
+    verbosity: ${LOG_LEVEL}
+
+    include: "${CONFIG_PATH}conf.d/*.conf"
+EOF
+	fi
+}
+
+configure_logging() {
+    if [ "$SETUP_TYPE" = "AUTO" ]; then
+        print_debug "Configuring Logging"
+        if [ "$LOG_TYPE" = "FILE" ] || [ "$LOG_TYPE" = "file" ] ; then
+            mkdir -p ${LOG_PATH}
+            chown -R ${UNBOUND_USER}: ${LOG_PATH}
+            sed -i "s#<LOG_LOCATION>#${LOG_PATH}#g" /etc/logrotate.d/unbound
+            sed -i "s#<LOG_FILE>#${LOG_FILE}#g" /etc/logrotate.d/unbound
+            logfile=${LOG_PATH}${LOG_FILE}
+        else
+            rm -rf /etc/logrotate.d/unbound
+            logfile=""
+        fi
+
+        ### Translate Logging
+        case "$LOG_LEVEL" in
+            "DETAILED" | "detailed" | "2" )
+                LOG_LEVEL=2
+            ;;
+            "QUERY" | "query" | "3" )
+                LOG_LEVEL=3
+            ;;
+            "ERROR" | "error" | "err" | "0" )
+                LOG_LEVEL=0
+            ;;
+            "ALGORITHM" | "algorithm" | "4" )
+                LOG_LEVEL=4
+            ;;
+            "CLIENT" | "client" | "5" )
+                LOG_LEVEL=5
+            ;;
+        esac
+    fi
+}
+
+truefalse_yesno() {
+    value=`set | grep ${1}= | cut -d '=' -f2`
+    var=`set | grep ${1}= | sed "s/=.*//g"`
+
+    if [ "$value" = "TRUE" ] || [ "$value" = "true" ]; then
+            print_debug "Converting Variable Name ${var} value to 'yes'"
+            unset $1
+            export $1="yes"
+    else
+            print_debug "Converting Variable Name ${var} value to 'no'"
+            unset $1
+            export $1="no"
+    fi
+}
