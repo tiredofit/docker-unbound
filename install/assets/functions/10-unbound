@@ -111,18 +111,3 @@ configure_logging() {
         esac
     fi
 }
-
-truefalse_yesno() {
-    value=`set | grep ${1}= | cut -d '=' -f2`
-    var=`set | grep ${1}= | sed "s/=.*//g"`
-
-    if [ "$value" = "TRUE" ] || [ "$value" = "true" ]; then
-            print_debug "Converting Variable Name ${var} value to 'yes'"
-            unset $1
-            export $1="yes"
-    else
-            print_debug "Converting Variable Name ${var} value to 'no'"
-            unset $1
-            export $1="no"
-    fi
-}
