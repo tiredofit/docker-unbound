@@ -1,3 +1,9 @@
+## 2.1.1 2020-08-31 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix Configuration building
+
+
 ## 2.1.0 2020-06-09 <dave at tiredofit dot ca>
 
    ### Added
