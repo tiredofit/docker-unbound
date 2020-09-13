@@ -1,3 +1,9 @@
+## 2.1.2 2020-09-13 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add a few more configuration options
+
+
 ## 2.1.1 2020-08-31 <dave at tiredofit dot ca>
 
    ### Changed

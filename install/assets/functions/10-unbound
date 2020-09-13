@@ -17,16 +17,22 @@ create_configuration() {
             fi
         fi
 
+        truefalse_yesno DENY_ANY
         truefalse_yesno ENABLE_IPV4
         truefalse_yesno ENABLE_IPV6
         truefalse_yesno ENABLE_TCP
         truefalse_yesno ENABLE_UDP
         truefalse_yesno HARDEN_DNSSEC_STRIPPED
+        truefalse_yesno HARDEN_GLUE
         truefalse_yesno HARDEN_LARGE_QUERIES
         truefalse_yesno HARDEN_SHORT_BUFFER_SIZE
         truefalse_yesno MINIMAL_RESPONSES
         truefalse_yesno NO_QUERY_LOCALHOST
+        truefalse_yesno LOG_QUERIES
+        truefalse_yesno LOG_REPLIES
         truefalse_yesno PREFETCH
+        truefalse_yesno PREFETCH_KEY
+        truefalse_yesno QNAME_MINIMIZATION
         truefalse_yesno RRSET_ROUNDROBIN
         truefalse_yesno SO_REUSE_PORT
         truefalse_yesno STATISTICS_CUMULATIVE
@@ -42,6 +48,7 @@ server:
     cache-max-negative-ttl: ${CACHE_TTL_MAX_NEGATIVE}
     cache-max-ttl: ${CACHE_TTL_MAX}
     cache-min-ttl: ${CACHE_TTL_MIN}
+    deny-any: ${DENY_ANY}
     do-ip4: ${ENABLE_IPV4}
     do-ip6: ${ENABLE_IPV6}
     do-not-query-localhost: ${NO_QUERY_LOCALHOST}
@@ -50,10 +57,13 @@ server:
     edns-buffer-size: ${CACHE_SIZE_EDNS}
     extended-statistics: ${STATISTICS_EXTENDED}
     harden-dnssec-stripped: ${HARDEN_DNSSEC_STRIPPED}
+    harden-glue: ${HARDEN_GLUE}
     harden-large-queries: ${HARDEN_LARGE_QUERIES}
     harden-short-bufsize: ${HARDEN_SHORT_BUFFER_SIZE}
     interface: ${LISTEN_IP}
     logfile: "${logfile}"
+    log_queries: ${LOG_QUERIES}
+    log_replies: ${LOG_REPLIES}
     minimal-responses: ${MINIMAL_RESPONSES}
     msg-buffer-size: ${BUFFER_SIZE_MSG}
     msg-cache-size: ${CACHE_SIZE_MSG}
@@ -63,6 +73,8 @@ server:
     pidfile: "/var/run/unbound.pid"
     port: ${LISTEN_PORT}
     prefetch: ${PREFETCH}
+    prefetch-key: ${PREFETCH_KEY}
+    qname-minimisation: ${QNAME_MINIMIZATION}
     root-hints: ${ROOT_HINTS}
     so-reuseport: ${SO_REUSE_PORT}
     statistics-cumulative: ${STATISTICS_CUMULATIVE}
