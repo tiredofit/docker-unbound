@@ -30,6 +30,8 @@ create_configuration() {
         truefalse_yesno NO_QUERY_LOCALHOST
         truefalse_yesno LOG_QUERIES
         truefalse_yesno LOG_REPLIES
+        truefalse_yesno LOG_SERVFAIL
+        truefalse_yesno LOG_TIME_ASCII
         truefalse_yesno PREFETCH
         truefalse_yesno PREFETCH_KEY
         truefalse_yesno QNAME_MINIMIZATION
@@ -62,8 +64,10 @@ server:
     harden-short-bufsize: ${HARDEN_SHORT_BUFFER_SIZE}
     interface: ${LISTEN_IP}
     logfile: "${logfile}"
-    log_queries: ${LOG_QUERIES}
-    log_replies: ${LOG_REPLIES}
+    log-queries: ${LOG_QUERIES}
+    log-replies: ${LOG_REPLIES}
+    log-servfail: ${LOG_SERVFAIL}
+    log-time-ascii: ${LOG_TIME_ASCII}
     minimal-responses: ${MINIMAL_RESPONSES}
     msg-buffer-size: ${BUFFER_SIZE_MSG}
     msg-cache-size: ${CACHE_SIZE_MSG}
