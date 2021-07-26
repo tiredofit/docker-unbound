@@ -1,10 +1,10 @@
-# hub.docker.com/r/tiredofit/unbound
+# github.com/tiredofit/docker-unbound
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/unbound.svg)](https://hub.docker.com/r/tiredofit/unbound)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/unbound.svg)](https://hub.docker.com/r/tiredofit/unbound)
 [![Docker Layers](https://images.microbadger.com/badges/image/tiredofit/unbound.svg)](https://microbadger.com/images/tiredofit/unbound)
 
-## Introduction
+## About
 
 Dockerfile to build an [Unbound DNS Cache](https://unbound.net) container image for quicker DNS lookups, mostly useful for mail servers, and other services that repeatedly rely on name resolution.
 
@@ -14,7 +14,7 @@ Dockerfile to build an [Unbound DNS Cache](https://unbound.net) container image 
 
 [Changelog](CHANGELOG.md)
 
-## Authors
+## Maintainer
 
 - [Dave Conroy](https://github.com/tiredofit/)
 
@@ -34,7 +34,7 @@ Dockerfile to build an [Unbound DNS Cache](https://unbound.net) container image 
   - [Shell Access](#shell-access)
 - [References](#references)
 
-## Prerequisites
+## Prerequisites and Assumptions
 
 None.
 
@@ -61,7 +61,7 @@ The following image tags are available:
 
 ## Configuration
 
-### Data-Volumes
+### Persistent Storage
 
 No files are required for persistent storage.
 
