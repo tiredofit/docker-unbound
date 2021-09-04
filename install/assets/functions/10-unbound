@@ -97,9 +97,9 @@ configure_logging() {
         print_debug "Configuring Logging"
         if [ "$LOG_TYPE" = "FILE" ] || [ "$LOG_TYPE" = "file" ] ; then
             mkdir -p "${LOG_PATH}"
+            touch ${LOG_PATH}/${LOG_FILE}
             chown -R "${UNBOUND_USER}": "${LOG_PATH}"
-            sed -i "s#<LOG_LOCATION>#${LOG_PATH}#g" /etc/logrotate.d/unbound
-            sed -i "s#<LOG_FILE>#${LOG_FILE}#g" /etc/logrotate.d/unbound
+            create_logrotate unbound ${LOG_PATH}/${LOG_FILE} none unbound unbound
             logfile="${LOG_PATH}""${LOG_FILE}"
         else
             rm -rf /etc/logrotate.d/unbound

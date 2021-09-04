@@ -6,6 +6,8 @@ ENV CONTAINER_ENABLE_MESSAGING=FALSE
 
 ### Install Dependencies
 RUN set -x && \
+    addgroup -g 5353 unbound && \
+    adduser -S -D -H -h /var/spool/postfix -s /sbin/nologin -G unbound -u 5353 unbound && \
     apk update && \
     apk upgrade && \
     apk add -t .unbound-run-deps \

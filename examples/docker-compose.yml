@@ -10,7 +10,7 @@ services:
       - ./config:/config
       - ./logs:/logs
     environment:
-      - ZABBIX_HOSTNAME=unbound-hostname-app
+      - CONTAINER_NAME=unbound-hostname-app
     networks:
       - services
     restart: always

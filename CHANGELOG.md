@@ -1,3 +1,12 @@
+## 2.2.0 2021-09-04 <dave at tiredofit dot ca>
+
+   ### Added
+      - Create Unbound user ahead of package installer
+
+   ### Changed
+      - Change the way log rotation configuration is performed
+
+
 ## 2.1.4 2021-07-25 <dave at tiredofit dot ca>
 
    ### Added
