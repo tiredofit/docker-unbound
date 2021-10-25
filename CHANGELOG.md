@@ -1,3 +1,9 @@
+## 2.2.1 2021-10-25 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add fluent-bit log parsing regular expressions
+
+
 ## 2.2.0 2021-09-04 <dave at tiredofit dot ca>
 
    ### Added

@@ -99,10 +99,9 @@ configure_logging() {
             mkdir -p "${LOG_PATH}"
             touch ${LOG_PATH}/${LOG_FILE}
             chown -R "${UNBOUND_USER}": "${LOG_PATH}"
-            create_logrotate unbound ${LOG_PATH}/${LOG_FILE} none unbound unbound
-            logfile="${LOG_PATH}""${LOG_FILE}"
+            create_logrotate unbound ${LOG_PATH}/${LOG_FILE} unbound unbound unbound
+            logfile="${LOG_PATH}/${LOG_FILE}"
         else
-            rm -rf /etc/logrotate.d/unbound
             logfile=""
         fi
 
