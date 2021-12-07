@@ -2,7 +2,6 @@
 
 create_configuration() {
 	if [ "$SETUP_TYPE" = "AUTO" ]; then
-
         print_notice "Configuring Unbound"
         mkdir -p "${CONFIG_PATH}"conf.d
         chown -R "${UNBOUND_USER}" "${CONFIG_PATH}"
@@ -123,5 +122,16 @@ configure_logging() {
                 LOG_LEVEL=5
             ;;
         esac
+    fi
+}
+
+setup_monitoring() {
+    if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
+        source /assets/defaults/03-monitoring
+        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_unbound.conf
+# Zabbix Unbound Configuration - Automatically Generated
+# Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-unbound
+# Autoregister=unbound
+EOF
     fi
 }

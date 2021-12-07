@@ -6,5 +6,6 @@ PROCESS_NAME="unbound"
 
 configure_logging
 create_configuration
+setup_monitoring
 
-liftoff 
+liftoff
