@@ -1,3 +1,9 @@
+## 2.2.4 2021-12-16 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Tweak for Zabbix autoregistration
+
+
 ## 2.2.3 2021-12-07 <dave at tiredofit dot ca>
 
    ### Added
