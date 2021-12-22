@@ -1,12 +1,13 @@
 #!/usr/bin/with-contenv bash
 
 source /assets/functions/00-container
-source /assets/defaults/03-monitoring
-prepare_service single
+
+prepare_service
 PROCESS_NAME="unbound"
 
+configure_certificates
 configure_logging
 create_configuration
-setup_monitoring
+if var_true "${ENABLE_REMOTE_CONTROL}" ; then configure_monitoring; fi;
 
 liftoff

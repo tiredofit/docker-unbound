@@ -1,3 +1,9 @@
+## 2.3.0 2021-12-22 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add Zabbix monitoring and certificate building
+
+
 ## 2.2.4 2021-12-16 <dave at tiredofit dot ca>
 
    ### Changed

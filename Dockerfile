@@ -11,6 +11,7 @@ RUN set -x && \
     apk update && \
     apk upgrade && \
     apk add -t .unbound-run-deps \
+               openssl \
                unbound \
                && \
     rm -rf /var/cache/apk/*

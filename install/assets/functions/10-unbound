@@ -1,5 +1,58 @@
 #!/usr/bin/with-contenv bash
 
+configure_certificates() {
+
+    if [ ! -f "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT}" ] || [ ! -f "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" ] ; then
+        print_debug "TLS: Creating Server Certificates"
+        mkdir -p "${TLS_SERVER_PATH}"
+        chown -f -R "${UNBOUND_USER}" "${TLS_SERVER_PATH}"
+        cat > "${TLS_SERVER_PATH}"/server.cnf <<EOF
+[req]
+default_bits=3072
+default_md=sha256
+prompt=no
+distinguished_name=req_distinguished_name
+x509_extensions=v3_ca
+[req_distinguished_name]
+commonName=unbound-server
+[v3_ca]
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always
+basicConstraints=critical,CA:TRUE,pathlen:0
+subjectAltName=DNS:unbound-server
+EOF
+        silent sudo -u "${UNBOUND_USER}" openssl genrsa -out "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" 3072
+        silent sudo -u "${UNBOUND_USER}" openssl req -new -x509 -key "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" -config "${TLS_SERVER_PATH}"/server.cnf -days 7200 -out "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT}"
+    fi
+
+    if [ ! -f "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_CERT}" ] || [ ! -f "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" ] ; then
+        print_debug "TLS: Creating Control Certificates"
+        mkdir -p "${TLS_CONTROL_PATH}"
+        chown -f -R "${UNBOUND_USER}" "${TLS_CONTROL_PATH}"
+        cat > "${TLS_CONTROL_PATH}"/client.cnf <<EOF
+[req]
+default_bits=3072
+default_md=sha256
+prompt=no
+distinguished_name=req_distinguished_name
+req_extensions=v3_req
+[req_distinguished_name]
+commonName=unbound-control
+[v3_req]
+basicConstraints=critical,CA:FALSE
+subjectAltName=DNS:unbound-control
+EOF
+
+        silent sudo -u "${UNBOUND_USER}" openssl genrsa -out "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" 3072
+        silent sudo -u "${UNBOUND_USER}" openssl x509 -addtrust serverAuth -in "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT}" -out "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT%.*}"_trust.pem
+        silent sudo -u "${UNBOUND_USER}" openssl req -new -config "${TLS_CONTROL_PATH}"/client.cnf -key "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" | \
+        silent sudo -u "${UNBOUND_USER}" openssl x509 -req -days 7200 -CA "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT%.*}"_trust.pem -CAkey "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" -CAcreateserial -sha256 -extfile  "${TLS_CONTROL_PATH}"/client.cnf -extensions v3_req -out "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_CERT}"
+        chmod -f o-rw "${TLS_CONTROL_PATH}"/{"${TLS_CONTROL_CERT}","${TLS_CONTROL_KEY}"}
+        chmod -f o-rw "${TLS_SERVER_PATH}"/{"${TLS_SERVER_CERT}","${TLS_SERVER_KEY}"}
+        rm -rf "${TLS_SERVER_PATH}"/server.cnf "${TLS_CONTROL_PATH}"/client.cnf "${TLS_SERVER_PATH}"/*_trust.pem "${TLS_CONTROL_PATH}"/*_trust.pem "${TLS_SERVER_PATH}"/*.srl
+    fi
+}
+
 create_configuration() {
 	if [ "$SETUP_TYPE" = "AUTO" ]; then
         print_notice "Configuring Unbound"
@@ -19,6 +72,7 @@ create_configuration() {
         truefalse_yesno DENY_ANY
         truefalse_yesno ENABLE_IPV4
         truefalse_yesno ENABLE_IPV6
+        truefalse_yesno ENABLE_REMOTE_CONTROL
         truefalse_yesno ENABLE_TCP
         truefalse_yesno ENABLE_UDP
         truefalse_yesno HARDEN_DNSSEC_STRIPPED
@@ -87,6 +141,16 @@ server:
     verbosity: ${LOG_LEVEL}
 
     include: ${CONFIG_PATH}conf.d/*.conf
+
+remote-control:
+    control-enable: ${ENABLE_REMOTE_CONTROL}
+    control-interface: ${REMOTE_CONTROL_LISTEN_IP}
+    control-port: ${REMOTE_CONTROL_LISTEN_PORT}
+    server-key-file: "${TLS_SERVER_PATH}/${TLS_SERVER_KEY}"
+    server-cert-file: "${TLS_SERVER_PATH}/${TLS_SERVER_CERT}"
+    control-key-file: "${TLS_CONTROL_PATH}/${TLS_CONTROL_KEY}"
+    control-cert-file: "${TLS_CONTROL_PATH}/${TLS_CONTROL_CERT}"
+
 EOF
 	fi
 }
@@ -96,9 +160,9 @@ configure_logging() {
         print_debug "Configuring Logging"
         if [ "$LOG_TYPE" = "FILE" ] || [ "$LOG_TYPE" = "file" ] ; then
             mkdir -p "${LOG_PATH}"
-            touch ${LOG_PATH}/${LOG_FILE}
+            touch "${LOG_PATH}"/"${LOG_FILE}"
             chown -R "${UNBOUND_USER}": "${LOG_PATH}"
-            create_logrotate unbound ${LOG_PATH}/${LOG_FILE} unbound unbound unbound
+            create_logrotate unbound "${LOG_PATH}"/"${LOG_FILE}" unbound unbound unbound
             logfile="${LOG_PATH}/${LOG_FILE}"
         else
             logfile=""
@@ -125,13 +189,13 @@ configure_logging() {
     fi
 }
 
-setup_monitoring() {
-    if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
-        source /assets/defaults/03-monitoring
-        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_unbound.conf
+configure_monitoring() {
+        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit-unbound.conf
 # Zabbix Unbound Configuration - Automatically Generated
 # Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-unbound
 # Autoregister=unbound
+
+UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c "${CONFIG_PATH}""${CONFIG_FILE}" stats_noreset | sort
+UserParameter=unbound.version,unbound -V | head -n1 | awk '{print $2}'
 EOF
-    fi
 }

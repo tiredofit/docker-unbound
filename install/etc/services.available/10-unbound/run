@@ -9,4 +9,4 @@ check_service_initialized init
 liftoff
 
 print_start "Starting Unbound"
-unbound -c ${CONFIG_PATH}${CONFIG_FILE} -d
+unbound -c "${CONFIG_PATH}""${CONFIG_FILE}" -d
