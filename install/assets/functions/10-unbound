@@ -196,6 +196,6 @@ configure_monitoring() {
 # Autoregister=unbound
 
 UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c "${CONFIG_PATH}""${CONFIG_FILE}" stats_noreset | sort
-UserParameter=unbound.version,unbound -V | head -n1 | awk '{print $2}'
+UserParameter=unbound.version,unbound -V | head -n1 | awk '{print \$2}'
 EOF
 }
