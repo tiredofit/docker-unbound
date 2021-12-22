@@ -1,3 +1,9 @@
+## 2.3.1 2021-12-22 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Patchup for fetching version via Zabbix
+
+
 ## 2.3.0 2021-12-22 <dave at tiredofit dot ca>
 
    ### Added
