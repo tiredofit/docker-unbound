@@ -45,7 +45,7 @@ EOF
 
         silent sudo -u "${UNBOUND_USER}" openssl genrsa -out "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" 3072
         silent sudo -u "${UNBOUND_USER}" openssl x509 -addtrust serverAuth -in "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT}" -out "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT%.*}"_trust.pem
-        silent sudo -u "${UNBOUND_USER}" openssl req -new -config "${TLS_CONTROL_PATH}"/client.cnf -key "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" | \
+        sudo -u "${UNBOUND_USER}" openssl req -new -config "${TLS_CONTROL_PATH}"/client.cnf -key "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_KEY}" | \
         silent sudo -u "${UNBOUND_USER}" openssl x509 -req -days 7200 -CA "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT%.*}"_trust.pem -CAkey "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" -CAcreateserial -sha256 -extfile  "${TLS_CONTROL_PATH}"/client.cnf -extensions v3_req -out "${TLS_CONTROL_PATH}"/"${TLS_CONTROL_CERT}"
         chmod -f o-rw "${TLS_CONTROL_PATH}"/{"${TLS_CONTROL_CERT}","${TLS_CONTROL_KEY}"}
         chmod -f o-rw "${TLS_SERVER_PATH}"/{"${TLS_SERVER_CERT}","${TLS_SERVER_KEY}"}
@@ -195,7 +195,7 @@ configure_monitoring() {
 # Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-unbound
 # Autoregister=unbound
 
-UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c "${CONFIG_PATH}""${CONFIG_FILE}" stats_noreset | sort
+UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c ${CONFIG_PATH}/${CONFIG_FILE} stats_noreset | sort
 UserParameter=unbound.version,unbound -V | head -n1 | awk '{print \$2}'
 EOF
 }

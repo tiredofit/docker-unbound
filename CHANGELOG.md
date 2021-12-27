@@ -1,3 +1,9 @@
+## 2.3.2 2021-12-27 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Minor fixup for Zabbix monitoring and creating temp certificates
+
+
 ## 2.3.1 2021-12-22 <dave at tiredofit dot ca>
 
    ### Changed
