@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
 
 ACCESS_CONTROL=${ACCESS_CONTROL:-"0.0.0.0/0 allow"}
 ACCESS_CONTROL_OUTGOING_PORT_PERMIT=${ACCESS_CONTROL_OUTGOING_PORT_PERMIT:-"10240-65535"}
