@@ -1,0 +1,3302 @@
+{
+    "zabbix_export": {
+        "version": "6.2",
+        "date": "2022-09-15T22:00:51Z",
+        "template_groups": [
+            {
+                "uuid": "a571c0d144b14fd4a87a9d9b2aa9fcd6",
+                "name": "Templates/Applications"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "2d102a2aa1f642f5a3a84f7f679d4c72",
+                "template": "Unbound",
+                "name": "Unbound",
+                "description": "Unbound DNS Resolver\n\nThis template is meant specficially to be used with https://github.com/tiredofit/docker-unbound",
+                "groups": [
+                    {
+                        "name": "Templates/Applications"
+                    }
+                ],
+                "items": [
+                    {
+                        "uuid": "3ca9dc08f48047db80bb417137f1b83f",
+                        "name": "Unbound: CPU Utilization",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "proc.cpu.util[unbound,,,]",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "%",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3e94659d2a4e44fcbf7d27ee3242ab09",
+                        "name": "Unbound: Memory usage (Physical)",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "proc.mem[,,,unbound,rss]",
+                        "history": "7d",
+                        "units": "B",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "63a7fbdc59744d1a9ee17c002da25b5a",
+                        "name": "Unbound: Memory usage (Virtual)",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "proc.mem[,,,unbound,vsize]",
+                        "history": "7d",
+                        "units": "B",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "64827fb235e04dd399f065815027d8cd",
+                        "name": "Unbound: Processes",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "proc.num[,,,unbound]",
+                        "history": "7d",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "4dd0ec3e1aa94185b7a3b831e58fdfcd",
+                                "expression": "sum(/Unbound/proc.num[,,,unbound],#3)=0",
+                                "name": "Unbound: Process is not running",
+                                "priority": "HIGH"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "9fb9ffcd0f1941c29b3eda35877a087d",
+                        "name": "Unbound: CHAOS class",
+                        "type": "DEPENDENT",
+                        "key": "unbound.class[CH]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "9e93b9b6855f4534900431cbe80de9a3",
+                        "name": "Unbound IN class",
+                        "type": "DEPENDENT",
+                        "key": "unbound.class[IN]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3a415591181442f6ac2f646d42ef88a8",
+                        "name": "Unbound: Get Statistics",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "unbound.get_statistics",
+                        "history": "60m",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "41bcbf8dfcb0480ca999dcf8488ace36",
+                                "expression": "nodata(/Unbound/unbound.get_statistics,30m)=1",
+                                "name": "Unbound: Failed to fetch statistics (or no data for 30m)",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "92ab0ef30274425c8b4278508fee7159",
+                        "name": "Unbound: histogram 0000 to 0.001 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000000.to.000000.000001]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000000.to.000000.000001=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "761cfe09e2474abcbb24835ca975e7e4",
+                        "name": "Unbound: histogram 0000.001 to 0.002 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000001.to.000000.000002]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000001.to.000000.000002=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "68435e3853364e7494097b8cfb2823ba",
+                        "name": "Unbound: histogram 0000.002 to 0.004 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000002.to.000000.000004]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000002.to.000000.000004=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "525e069e1d244d3a917df368f2312064",
+                        "name": "Unbound: histogram 0000.004 to 0.008 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000004.to.000000.000008]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000004.to.000000.000008=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "467123f80bb04aabb265955ecd3a41df",
+                        "name": "Unbound: histogram 0000.008 to 0.016 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000008.to.000000.000016]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000008.to.000000.000016=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "38fdd1067bdb446198e6c916f4d05196",
+                        "name": "Unbound: histogram 0000.032 to 0.064 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000032.to.000000.000064]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000032.to.000000.000064=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6109a4ba3a804efbb4aead7e60d8a964",
+                        "name": "Unbound: histogram 0000.064 to 0.128 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000064.to.000000.000128]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000064.to.000000.000128=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "864dfe8754c146e9a70f4ba291a61ee0",
+                        "name": "Unbound: histogram 0000.128 to 0.256 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000128.to.000000.000256]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000128.to.000000.000256=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "47e33d8c8ad84b2cb48519fd20a98e4b",
+                        "name": "Unbound: histogram 0000.256 to 0.512 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000256.to.000000.000512]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000256.to.000000.000512=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "9f5517999ae543d8aba01fd223b93eeb",
+                        "name": "Unbound: histogram: 0000.512 to 1.024 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.000512.to.000000.001024]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000512.to.000000.001024=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1027033d199148ab85e671cdb2154196",
+                        "name": "Unbound: histogram 0001.024 to 2.048 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.001024.to.000000.002048]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.001024.to.000000.002048=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "eb80dfbae3474435a58a92cdc7260345",
+                        "name": "Unbound: histogram 0004.096 to 8.192 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.004096.to.000000.008192]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.004096.to.000000.008192=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "523749f6caa64c7e929369a381e331f2",
+                        "name": "Unbound: histogram 0008.192 to 16.384 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.008192.to.000000.016384]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.008192.to.000000.016384=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4d4f3c5fdc614dcfa958687bab170389",
+                        "name": "Unbound: histogram 0016.384 to 32.768 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.016384.to.000000.032768]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.016384.to.000000.032768=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8940fedf743a43f3a1f2d32d28111eac",
+                        "name": "Unbound: histogram 0032.768 to 65.536 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.032768.to.000000.065536]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.032768.to.000000.065536=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "37c06df91cff4fbfbdff1e6819feb15b",
+                        "name": "Unbound: histogram 0065.536 to 131.072 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.065536.to.000000.131072]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.065536.to.000000.131072=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "cc56f6ff7ff54b88815e66569cad34be",
+                        "name": "Unbound: histogram 0131.072 to 262.144 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.131072.to.000000.262144]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.131072.to.000000.262144=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "995a9d3d7bca452996267798f69071d1",
+                        "name": "Unbound: histogram 0262.144 to 524.288 ms total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000000.262144.to.000000.524288]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.262144.to.000000.524288=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "62cc1deaeea84e55b3ba8c73fd43107a",
+                        "name": "Unbound: histogram 1 to 2 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000001.000000.to.000002.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000001.000000.to.000002.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3927b795d9454019841a18ed9c5bda9d",
+                        "name": "Unbound: histogram 2 to 4 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000002.000000.to.000004.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000002.000000.to.000004.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b39a22f7055b4d98b8fa7ad74de17f98",
+                        "name": "Unbound: histogram 4 to 8 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000004.000000.to.000008.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000004.000000.to.000008.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "bdbcd960745b445bb69d653f2e4b9f04",
+                        "name": "Unbound: histogram 8 to 16 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000008.000000.to.000016.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000008.000000.to.000016.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0659a5e4d7d7458cb748744c5fb714ff",
+                        "name": "Unbound: histogram 16 to 32 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000016.000000.to.000032.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000016.000000.to.000032.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "252d4906dd38461aab483cdfd8b1fbf2",
+                        "name": "Unbound: histogram 32 to 64 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000032.000000.to.000064.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000032.000000.to.000064.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "035bf6e9ef5a44df91b09b0a79dcb367",
+                        "name": "Unbound: histogram 64 to 128 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000064.000000.to.000128.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000064.000000.to.000128.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "098cf78fb2db4b3eb6863fd4bebbef0b",
+                        "name": "Unbound: histogram 256 to 512 sec total",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram.total[000256.000000.to.000512.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000256.000000.to.000512.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "03a863f664ce4a89b3d0db3443bfc654",
+                        "name": "Unbound: histogram 0 to 0.001 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000000.to.000000.000001]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000000.to.000000.000001=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "88b16ed4096a452393efbfaaf543ce5c",
+                        "name": "Unbound: histogram 0.001 to 0.002 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000001.to.000000.000002]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000001.to.000000.000002=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "f9beec5c6d9542d2aa0c5fa31cda439d",
+                        "name": "Unbound: histogram 0.002 to 0.004 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000002.to.000000.000004]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000002.to.000000.000004=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0f7975614f04485cbcdbcd56d4b9f7cd",
+                        "name": "Unbound: histogram 0.004 to 0.008 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000004.to.000000.000008]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000004.to.000000.000008=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "dd2582ac541c4424870447a5edacc598",
+                        "name": "Unbound: histogram 0.008 to 0.016 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000008.to.000000.000016]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000008.to.000000.000016=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "2900e214335f40ea9f4abaf9a5d3c3e7",
+                        "name": "Unbound: histogram 0.032 to 0.064 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000032.to.000000.000064]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000032.to.000000.000064=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "920b183079664ecb882eaed524cc01d6",
+                        "name": "Unbound: histogram 0.064 to 0.128 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000064.to.000000.000128]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000064.to.000000.000128=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "2b52937e708f4c228a7dceeaf37ab3a5",
+                        "name": "Unbound: histogram 0.128 to 0.256 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000128.to.000000.000256]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000128.to.000000.000256=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "7a0568efd8404e78992aa015872ab336",
+                        "name": "Unbound: histogram 0.256 to 0.512 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000256.to.000000.000512]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000256.to.000000.000512=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "562ece178a31469cba0b390bdaac66bf",
+                        "name": "Unbound: histogram 0.512 to 1.024 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.000512.to.000000.001024]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.000512.to.000000.001024=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "ec5afe0e5f844f9087e55c4e955d01ae",
+                        "name": "Unbound: histogram 1.024 to 2.048 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.001024.to.000000.002048]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.001024.to.000000.002048=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4734f27e226047448eb953a8075822bd",
+                        "name": "Unbound: histogram 4.096 to 8.192 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.004096.to.000000.008192]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.004096.to.000000.008192=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "567e8aefb0f247b9bfdd8dd681657325",
+                        "name": "Unbound: histogram 8.192 to 16.384 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.008192.to.000000.016384]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.008192.000000.to.016384.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "cfaa0217363d4e9c8e6cd7c3e6ad2fb3",
+                        "name": "Unbound: histogram 16.384 to 32.768 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.016384.to.000000.032768]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.016384.to.000000.032768=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a6fc5f68db5f4849b9be833f813c7337",
+                        "name": "Unbound: histogram 32.768 to 65.536 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.032768.to.000000.065536]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.032768.to.000000.065536=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "f6827dac28fe4a3b9ce57fada917f6d9",
+                        "name": "Unbound: histogram 65.536 to 131.072 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.065536.to.000000.131072]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.065536.to.000000.131072=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3efa2333f3ce4d6d87e6a902b3817e84",
+                        "name": "Unbound: histogram 131.072 to 262.144 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.131072.to.000000.262144]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000000.131072.to.000000.262144=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "09f68a8fec5b4e4880669660bbf12ec8",
+                        "name": "Unbound: histogram 262.144 to 524.288 ms",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000000.262144.to.000000.524288]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.262144.000000.to.524288.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b38fd30135464c23b5cfa1e0d0c4c29a",
+                        "name": "Unbound: histogram 1 to 2 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000001.000000.to.000002.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000001.000000.to.000002.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6c1d5acb2cf34c318b79533f2c5c450b",
+                        "name": "Unbound: histogram 2 to 4 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000002.000000.to.000004.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000002.000000.to.000004.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "65f77c2aa8dc46d5a7f00be4b6908e5a",
+                        "name": "Unbound: histogram 4 to 8 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000004.000000.to.000008.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000004.000000.to.000008.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "99a44b8cef6d4bf1864a854edcc7193c",
+                        "name": "Unbound: histogram 8 to 16 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000008.000000.to.000016.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000008.000000.to.000016.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b441ac154a5f4e5591c544e379d90117",
+                        "name": "Unbound: histogram 16 to 32 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000016.000000.to.000032.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000016.000000.to.000032.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a84ad3be8c78457e98371024ff36f989",
+                        "name": "Unbound: histogram 32 to 64 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000032.000000.to.000064.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000032.000000.to.000064.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "26f4bb2c6ee444aab3221daeb8956968",
+                        "name": "Unbound: histogram 64 to 128 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000064.000000.to.000128.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000064.000000.to.000128.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "46713b5e43064c208f82c66813992435",
+                        "name": "Unbound: histogram 256 to 512 sec",
+                        "type": "DEPENDENT",
+                        "key": "unbound.histogram[000256.000000.to.000512.000000]",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "histogram.000256.000000.to.000512.000000=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "d3d6c05e956b4dd4b1525b517865c030",
+                        "name": "Unbound: Memory - Cache Message",
+                        "type": "DEPENDENT",
+                        "key": "unbound.memory.cache.message",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "B",
+                        "description": "Message cache memory",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "mem.cache.message=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "11f7b2495e1e45a7ab5e1e917e5c33bc",
+                        "name": "Unbound: Memory - Cache RRSet",
+                        "type": "DEPENDENT",
+                        "key": "unbound.memory.cache.rrset",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "B",
+                        "description": "RRset cache memory",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "mem.cache.rrset=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "acba13adde5e45d3b5a0625bfc455a1f",
+                        "name": "Unbound: Memory - Iterator",
+                        "type": "DEPENDENT",
+                        "key": "unbound.memory.iterator",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "B",
+                        "description": "Iterator module memory",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "mem.mod.iterator=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6608338e33bc4706a4effd39d930bd54",
+                        "name": "Unbound: Memory - Validator module and key cache",
+                        "type": "DEPENDENT",
+                        "key": "unbound.memory.validator",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "B",
+                        "description": "Validator module and key cache memory",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "mem.mod.validator=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a97a3d832096418299714163dd38d02c",
+                        "name": "Unbound: Queries - DNSSEC OK",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.edns.do",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with DO (DNSSEC OK) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.edns.DO=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "53d990ccb9ce45a28d63c741ba2ef8b0",
+                        "name": "Unbound: Queries - EDNS OPT present",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.edns.present",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with EDNS OPT present",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.edns.present=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "f8609c80e9424a72980f926ed351bf5c",
+                        "name": "Unbound: Queries - Flags: AD",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.ad",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with AD (auth data) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.AD=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3887e19537fe4668bf65c24e94427ac7",
+                        "name": "Unbound: Queries - Flags: CD",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.cd",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with CD (check disabled) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.CD=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4da5439bba1d40e5890ca3e53aefe5f2",
+                        "name": "Unbound: Queries - Flags: QR",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.qr",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with QR (query reply) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.QR=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "5f5e1447acc0458e97448f62e6de2375",
+                        "name": "Unbound: Queries - Flags: RA",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.ra",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with RA (rec avail) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.RA=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "9af7319120514640aa2b5f2558b7713e",
+                        "name": "Unbound: Queries - Flags: RD",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.rd",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with RD (recursion desired) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.RD=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "28394c2f3a1e45a4ab2b292488df9e69",
+                        "name": "Unbound: Queries - Flags: TC",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.tc",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with TC (truncated) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.TC=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "36008ae2b4074439bbdd05bbd199b53d",
+                        "name": "Unbound: Queries - TCP",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.tcp",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "TCP queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.tcp=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "2dcb6441072d4305a9edcf773d8efa22",
+                        "name": "Unbound: Queries - Flags: Z",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.flags.z",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second with Z (zero) flag",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.flags.Z=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "d3996067ab0b467fb1b5f89f4f4746bb",
+                        "name": "Unbound: Queries - IPV6",
+                        "type": "DEPENDENT",
+                        "key": "unbound.query.ipv6",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "IPv6 queries",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.query.ipv6=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6f5c4fe46e8f4e7793b7c6548611b163",
+                        "name": "Unbound: RCODE - FORMERROR",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.formerror",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.FORMERR=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "dcb423d464204a1da05d980706a2a63d",
+                        "name": "Unbound: RCODE - NOERROR",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.noerror",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.NOERROR=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0b04888b8f9446b5b62f86d74c8e58c7",
+                        "name": "Unbound: RCODE - NOTIMPL",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.notimpl",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.NOTIMPL=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "da83484be2f44abaab7623cf2ebdbad3",
+                        "name": "Unbound: RCODE - NXDOMAIN",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.nxdomain",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.NXDOMAIN=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8fc27f1b1d2949eb9c03ed4fdc3523d4",
+                        "name": "Unbound: RCODE - REFUSED",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.refused",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.REFUSED=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "673f2a534e9f4dccbfd864c33eac4323",
+                        "name": "Unbound: RCODE - SERVFAIL",
+                        "type": "DEPENDENT",
+                        "key": "unbound.rcode.servfail",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "num.answer.rcode.SERVFAIL=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "f1882d289fbb4f799e9015f2d716569d",
+                        "name": "Unbound: Uptime",
+                        "type": "DEPENDENT",
+                        "key": "unbound.time.up",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "time.up=([0-9].*)",
+                                    "\\1"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "587fb844471446db839c58aa67d4be5d",
+                        "name": "Unbound: Total - Cache Hits",
+                        "type": "DEPENDENT",
+                        "key": "unbound.total.cachehits",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Cache hits",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "total.num.cachehits=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "42497a0372c14fd8a3a92ae0db7aa7f8",
+                        "name": "Unbound: Total - Cache Misses",
+                        "type": "DEPENDENT",
+                        "key": "unbound.total.cachemiss",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Cache misses",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "total.num.cachemiss=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "c2a5f370439f473ba993b272e3b86c58",
+                        "name": "Unbound: Total - Queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.total.queries",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Total queries from clients",
+                        "preprocessing": [
+                            {
+                                "type": "REGEX",
+                                "parameters": [
+                                    "total.num.queries=([0-9].*)",
+                                    "\\1"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4da26c55df684d1d87366df9ecdae2db",
+                        "name": "Unbound AAAA queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[AAAA]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type AAAA (IPv6)",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8a5a68b7c1f645c6a42eba527af87144",
+                        "name": "Unbound ANY queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[ANY]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type ANY",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a01da726211747328384fda4a3975654",
+                        "name": "Unbound A queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[A]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type A",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "db8f9e6eb13a4a0194996705b5ef55d3",
+                        "name": "Unbound CNAME queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[CNAME]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type CNAME",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "bbc527381d97482ca5384fa5b3f0c91c",
+                        "name": "Unbound MX queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[MX]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type MX",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b62eac2e5801434b84891350e4f939f3",
+                        "name": "Unbound NS queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[NS]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type NS",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6f5b697f9dc14cd7811859325922e1a4",
+                        "name": "Unbound PTR queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[PTR]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type PTR",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a440f8af9acb4f7f87f38a6f3970f3f7",
+                        "name": "Unbound SOA queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[SOA]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type SOA",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "84ada245cee54351baa70654e96eef7a",
+                        "name": "Unbound SPF queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[SPF]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type SPF",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "d2150f37729145969faf102da9e0bfca",
+                        "name": "Unbound SRV queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[SRV]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type SRV",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "207fafb2d9d14cc6b6534ad084957e06",
+                        "name": "Unbound TXT queries",
+                        "type": "DEPENDENT",
+                        "key": "unbound.type[TXT]",
+                        "delay": "0",
+                        "history": "7d",
+                        "status": "DISABLED",
+                        "value_type": "FLOAT",
+                        "units": "qps",
+                        "description": "Number of queries per second of type TXT",
+                        "preprocessing": [
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "unbound.get_statistics"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "ccebc391e8a14bc4a93266b39ddbe127",
+                        "name": "Unbound: Version",
+                        "type": "ZABBIX_ACTIVE",
+                        "key": "unbound.version",
+                        "delay": "60m",
+                        "history": "7d",
+                        "trends": "0",
+                        "value_type": "CHAR",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Unbound"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "8775fae98b17478d893ea55a73e03248",
+                                "expression": "last(/Unbound/unbound.version,#1)<>last(/Unbound/unbound.version,#2) \nand length(last(/Unbound/unbound.version))>0",
+                                "name": "Unbound: Version has changed (new version: {ITEM.VALUE})",
+                                "priority": "INFO",
+                                "manual_close": "YES"
+                            }
+                        ]
+                    }
+                ],
+                "tags": [
+                    {
+                        "tag": "Service",
+                        "value": "DNS"
+                    }
+                ],
+                "dashboards": [
+                    {
+                        "uuid": "930c7becf61345a1afffa95c08c3ca5f",
+                        "name": "Unbound: Process Information",
+                        "pages": [
+                            {
+                                "widgets": [
+                                    {
+                                        "type": "GRAPH_CLASSIC",
+                                        "width": "24",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "GRAPH",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "Unbound",
+                                                    "name": "Unbound: CPU Utilization"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "GRAPH_CLASSIC",
+                                        "y": "5",
+                                        "width": "24",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "GRAPH",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "Unbound",
+                                                    "name": "Unbound: Memory Used"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "graphs": [
+            {
+                "uuid": "c9bccbaf199f4af096fbc90e2f8add6a",
+                "name": "Unbound: CPU Utilization",
+                "graph_items": [
+                    {
+                        "sortorder": "1",
+                        "color": "1A7C11",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "proc.cpu.util[unbound,,,]"
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "fa1ce034dd7d4c6b8b9681a7015c49e9",
+                "name": "Unbound: Memory Used",
+                "graph_items": [
+                    {
+                        "sortorder": "1",
+                        "color": "1A7C11",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "proc.mem[,,,unbound,rss]"
+                        }
+                    },
+                    {
+                        "sortorder": "2",
+                        "color": "F63100",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "proc.mem[,,,unbound,vsize]"
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "0da2e30583bd4b62a37308dad26b08a1",
+                "name": "Unbound DNS queries by flags",
+                "type": "STACKED",
+                "graph_items": [
+                    {
+                        "color": "C80000",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.histogram[000000.000000.to.000000.000001]"
+                        }
+                    },
+                    {
+                        "sortorder": "1",
+                        "color": "00C800",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.ad"
+                        }
+                    },
+                    {
+                        "sortorder": "2",
+                        "color": "0000C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.cd"
+                        }
+                    },
+                    {
+                        "sortorder": "3",
+                        "color": "C800C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.edns.do"
+                        }
+                    },
+                    {
+                        "sortorder": "4",
+                        "color": "00C8C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.edns.present"
+                        }
+                    },
+                    {
+                        "sortorder": "5",
+                        "color": "C8C800",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.qr"
+                        }
+                    },
+                    {
+                        "sortorder": "6",
+                        "color": "C8C8C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.ra"
+                        }
+                    },
+                    {
+                        "sortorder": "7",
+                        "color": "960000",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.rd"
+                        }
+                    },
+                    {
+                        "sortorder": "8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.tc"
+                        }
+                    },
+                    {
+                        "sortorder": "9",
+                        "color": "000096",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.flags.z"
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "e91adf04b0de4c3b8287c60e2e988795",
+                "name": "Unbound DNS queries by type",
+                "type": "STACKED",
+                "graph_items": [
+                    {
+                        "color": "009696",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[A]"
+                        }
+                    },
+                    {
+                        "sortorder": "1",
+                        "color": "000096",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[AAAA]"
+                        }
+                    },
+                    {
+                        "sortorder": "2",
+                        "color": "00FF00",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[PTR]"
+                        }
+                    },
+                    {
+                        "sortorder": "3",
+                        "color": "969696",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[MX]"
+                        }
+                    },
+                    {
+                        "sortorder": "4",
+                        "color": "960096",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[ANY]"
+                        }
+                    },
+                    {
+                        "sortorder": "5",
+                        "color": "969600",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[CNAME]"
+                        }
+                    },
+                    {
+                        "sortorder": "6",
+                        "color": "FF0000",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[NS]"
+                        }
+                    },
+                    {
+                        "sortorder": "7",
+                        "color": "0000FF",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[SOA]"
+                        }
+                    },
+                    {
+                        "sortorder": "8",
+                        "color": "FF00FF",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[SPF]"
+                        }
+                    },
+                    {
+                        "sortorder": "9",
+                        "color": "00FFFF",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[SRV]"
+                        }
+                    },
+                    {
+                        "sortorder": "10",
+                        "color": "FFFF00",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.type[TXT]"
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "f4d377712fdb4334b15be762ff7a0674",
+                "name": "Unbound DNS traffic and cache hits",
+                "graph_items": [
+                    {
+                        "color": "C80000",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.total.cachehits"
+                        }
+                    },
+                    {
+                        "sortorder": "1",
+                        "color": "00C800",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.query.ipv6"
+                        }
+                    },
+                    {
+                        "sortorder": "2",
+                        "drawtype": "GRADIENT_LINE",
+                        "color": "0000C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.total.queries"
+                        }
+                    }
+                ]
+            },
+            {
+                "uuid": "849bfefe44004a9fad36a51863801a34",
+                "name": "Unbound memory usage",
+                "graph_items": [
+                    {
+                        "sortorder": "1",
+                        "color": "C80000",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.memory.iterator"
+                        }
+                    },
+                    {
+                        "sortorder": "2",
+                        "color": "00C800",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.memory.cache.message"
+                        }
+                    },
+                    {
+                        "sortorder": "3",
+                        "color": "0000C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.memory.cache.rrset"
+                        }
+                    },
+                    {
+                        "sortorder": "4",
+                        "color": "00C8C8",
+                        "item": {
+                            "host": "Unbound",
+                            "key": "unbound.memory.validator"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
