@@ -2,7 +2,6 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/unbound.svg)](https://hub.docker.com/r/tiredofit/unbound)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/unbound.svg)](https://hub.docker.com/r/tiredofit/unbound)
-[![Docker Layers](https://images.microbadger.com/badges/image/tiredofit/unbound.svg)](https://microbadger.com/images/tiredofit/unbound)
 
 ## About
 
