@@ -8,7 +8,7 @@ ENV CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/unbound" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-unbound/"
 
-RUN source /assets/functions/00-container
+RUN source /assets/functions/00-container && \
     set -x && \
     addgroup -g 5353 unbound && \
     adduser -S -D -H -h /var/spool/postfix -s /sbin/nologin -G unbound -u 5353 unbound && \
