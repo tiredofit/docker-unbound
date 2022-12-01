@@ -1,3 +1,9 @@
+## 2.4.0 2022-12-01 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Rework Dockerfile
+
+
 ## 2.3.7 2022-11-23 <dave at tiredofit dot ca>
 
    ### Added
