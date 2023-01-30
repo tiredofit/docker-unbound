@@ -40,12 +40,18 @@ None.
 
 ## Installation
 
-Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/unbound) and is the recommended method of installation.
+Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/unbound)
 
 
 ```bash
 docker pull hub.docker.com/tiredofit/unbound:(imagetag)
 ```
+
+Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-tiredofit/pkgs/container/docker-tiredofit) 
+ 
+```
+docker pull ghcr.io/tiredofit/docker-tiredofit/pkgs/container/docker-tiredofit):(imagetag)
+``` 
 
 The following image tags are available:
 * `latest` - Most recent release of Unbound w/ Alpine Linux
