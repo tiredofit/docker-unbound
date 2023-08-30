@@ -1,3 +1,10 @@
+## 2.5.0 2023-08-30 <dave at tiredofit dot ca>
+
+   ### Added
+      - Unbound 1.18.0
+      - Switch to using packaged version and start compiling from source
+
+
 ## 2.4.1 2023-05-10 <dave at tiredofit dot ca>
 
    ### Changed
