@@ -1,3 +1,9 @@
+## 2.5.4 2024-05-10 <dave at tiredofit dot ca>
+
+   ### Added
+      - Unbound 1.20.0
+
+
 ## 2.5.3 2024-03-10 <dave at tiredofit dot ca>
 
    ### Added
