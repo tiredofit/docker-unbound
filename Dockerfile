@@ -1,11 +1,11 @@
 ARG DISTRO="alpine"
-ARG DISTRO_VARIANT="3.19"
+ARG DISTRO_VARIANT="3.20"
 
 FROM docker.io/tiredofit/${DISTRO}:${DISTRO_VARIANT}
 LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
 ARG UNBOUND_VERSION
-ENV UNBOUND_VERSION=${UNBOUND_VERSION:-"release-1.20.0"} \
+ENV UNBOUND_VERSION=${UNBOUND_VERSION:-"release-1.21.0"} \
     UNBOUND_REPO_URL=https://github.com/NLnetLabs/unbound \
     CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/unbound" \
