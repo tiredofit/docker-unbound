@@ -1,3 +1,9 @@
+## 2.5.7 2024-10-03 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix for 2.5.6
+
+
 ## 2.5.6 2024-10-03 <dave at tiredofit dot ca>
 
    ### Added
