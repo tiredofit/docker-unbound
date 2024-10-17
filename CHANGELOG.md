@@ -1,3 +1,10 @@
+## 2.5.8 2024-10-17 <dave at tiredofit dot ca>
+
+   ### Added
+      - Unbound 1.22.0
+      - tiredofit/alpine:3.20-7.10.16
+
+
 ## 2.5.7 2024-10-03 <dave at tiredofit dot ca>
 
    ### Changed
