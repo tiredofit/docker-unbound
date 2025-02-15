@@ -54,20 +54,19 @@ EOF
 }
 
 create_configuration() {
-	if [ "$SETUP_TYPE" = "AUTO" ]; then
+	if [ "${SETUP_TYPE,,}" = "auto" ]; then
         print_notice "Configuring Unbound"
-        mkdir -p "${CONFIG_PATH}"conf.d
-        chown -R "${UNBOUND_USER}" "${CONFIG_PATH}"
+        mkdir -p "${CONFIG_PATH}"/conf.d
 
-        if [ ! -f "${ROOT_HINTS}" ] ; then
-            print_notice "Downloading Root Hints"
-            sudo -u "${UNBOUND_USER}" curl ftp://ftp.internic.net/domain/named.cache > "${ROOT_HINTS}"
-        else
-            if [[ $(find "$ROOT_HINTS" -mtime +30 -print) ]] ;  then
-                print_notice "Root Hints are older than 30 days - Refreshing"
-                sudo -u "${UNBOUND_USER}" curl ftp://ftp.internic.net/domain/named.cache > "${ROOT_HINTS}"
-            fi
+        if [ ! -f "${ROOT_HINTS_FILE}" ] ; then
+            cp -aR /assets/unbound/named.cache "${ROOT_HINTS_FILE}"
         fi
+        if [[ $(find "${ROOT_HINTS_FILE}" -mtime +30 -print) ]] ;  then
+            print_notice "Root Hints are older than 30 days - Refreshing"
+            curl -sSL "${ROOT_HINTS_URI}" | sudo -u "${UNBOUND_USER}" tee "${ROOT_HINTS_FILE}"
+        fi
+
+        chown -R "${UNBOUND_USER}" "${CONFIG_PATH}"
 
         truefalse_yesno DENY_ANY
         truefalse_yesno ENABLE_IPV4
@@ -132,7 +131,7 @@ server:
     prefetch: ${PREFETCH}
     prefetch-key: ${PREFETCH_KEY}
     qname-minimisation: ${QNAME_MINIMIZATION}
-    root-hints: ${ROOT_HINTS}
+    root-hints: ${ROOT_HINTS_FILE}
     so-reuseport: ${SO_REUSE_PORT}
     statistics-cumulative: ${STATISTICS_CUMULATIVE}
     statistics-interval: ${STATISTICS_INTERVAL}
@@ -156,9 +155,9 @@ EOF
 }
 
 configure_logging() {
-    if [ "$SETUP_TYPE" = "AUTO" ]; then
+    if [ "${SETUP_TYPE,,}" = "auto" ]; then
         print_debug "Configuring Logging"
-        if [ "$LOG_TYPE" = "FILE" ] || [ "$LOG_TYPE" = "file" ] ; then
+        if [ "${LOG_TYPE,,}" = "file" ] ; then
             mkdir -p "${LOG_PATH}"
             touch "${LOG_PATH}"/"${LOG_FILE}"
             chown -R "${UNBOUND_USER}": "${LOG_PATH}"
@@ -169,20 +168,20 @@ configure_logging() {
         fi
 
         ### Translate Logging
-        case "$LOG_LEVEL" in
-            "DETAILED" | "detailed" | "2" )
+        case "${LOG_LEVEL,,}" in
+            detailed | 2 )
                 LOG_LEVEL=2
             ;;
-            "QUERY" | "query" | "3" )
+            query | 3 )
                 LOG_LEVEL=3
             ;;
-            "ERROR" | "error" | "err" | "0" )
+            err* | 0 )
                 LOG_LEVEL=0
             ;;
-            "ALGORITHM" | "algorithm" | "4" )
+            algorithm | 4 )
                 LOG_LEVEL=4
             ;;
-            "CLIENT" | "client" | "5" )
+            client | 5 )
                 LOG_LEVEL=5
             ;;
         esac

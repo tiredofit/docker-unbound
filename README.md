@@ -19,14 +19,14 @@ Dockerfile to build an [Unbound DNS Cache](https://unbound.net) container image 
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Authors](#authors)
+- [About](#about)
+- [Maintainer](#maintainer)
 - [Table of Contents](#table-of-contents)
-- [Prerequisites](#prerequisites)
+- [Prerequisites and Assumptions](#prerequisites-and-assumptions)
 - [Installation](#installation)
   - [Quick Start](#quick-start)
 - [Configuration](#configuration)
-  - [Data-Volumes](#data-volumes)
+  - [Persistent Storage](#persistent-storage)
   - [Environment Variables](#environment-variables)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
@@ -47,11 +47,11 @@ Automated builds of the image are available on [Docker Hub](https://hub.docker.c
 docker pull hub.docker.com/tiredofit/unbound:(imagetag)
 ```
 
-Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-tiredofit/pkgs/container/docker-tiredofit) 
- 
+Builds of the image are also available on the [Github Container Registry](https://github.com/tiredofit/docker-tiredofit/pkgs/container/docker-tiredofit)
+
 ```
 docker pull ghcr.io/tiredofit/docker-tiredofit:(imagetag)
-``` 
+```
 
 The following image tags are available:
 * `latest` - Most recent release of Unbound w/ Alpine Linux

@@ -62,6 +62,11 @@ RUN source /assets/functions/00-container && \
 	sed -i -e '/^LIBS=/s/-lpython.*[[:space:]]/ /' Makefile && \
 	make -j$(nproc)&& \
     make install && \
+    mkdir -p \
+        /assets/unbound \
+        && \
+    curl -sSL https://www.internic.net/domain/named.cache -o /assets/unbound/named.cache && \
+    chown -R unbound /assets/unbound && \
     package remove .unbound-install-deps && \
     package cleanup
 

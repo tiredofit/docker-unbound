@@ -1,3 +1,13 @@
+## 2.6.0 2025-02-14 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add configurable ROOT_HINTS_URI environment variable to choose where to refresh root hints from
+      - Include Root hints on build and update only if 30 days or older
+
+   ### Changed
+      - Small amount of polish cleaning up old and weird variables
+
+
 ## 2.5.9 2024-12-07 <dave at tiredofit dot ca>
 
    ### Added

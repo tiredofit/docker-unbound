@@ -1,4 +1,3 @@
-version: '3.7'
 services:
 
   unbound-app:
@@ -10,6 +9,7 @@ services:
       - ./config:/config
       - ./logs:/logs
     environment:
+      - TIMEZONE=America/Vancouver
       - CONTAINER_NAME=unbound-hostname-app
     networks:
       - services
