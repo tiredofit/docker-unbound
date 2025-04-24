@@ -1,3 +1,10 @@
+## 2.6.2 2025-04-24 <dave at tiredofit dot ca>
+
+   ### Added
+      - Unbound 1.23.0
+      - Pin to tiredofit/alpine:7.10.29
+
+
 ## 2.6.1 2025-02-14 <dave at tiredofit dot ca>
 
    ### Added
