@@ -92,7 +92,7 @@ create_configuration() {
         truefalse_yesno STATISTICS_CUMULATIVE
         truefalse_yesno STATISTICS_EXTENDED
 
-		sudo -u "${UNBOUND_USER}" cat << EOF > "${CONFIG_PATH}""${CONFIG_FILE}"
+		cat <<EOF | silent sudo -u "${UNBOUND_USER}" tee "${CONFIG_PATH}"/"${CONFIG_FILE}"
 ## Custom Generated Unbound Configuration! Do not edit, instead set ENV Vars
 ## If you want to use your own configuration files set SETUP_TYPE=MANUAL when starting container
 ## Last Generated on $(date)
@@ -151,6 +151,19 @@ remote-control:
     control-cert-file: "${TLS_CONTROL_PATH}/${TLS_CONTROL_CERT}"
 
 EOF
+
+        fowarddomainnum=$(printenv | sort | grep -cE '^FORWARD_DOMAIN_[0-9]+_NAME=')
+        for ((i = 1; i <= fowarddomainnum; i++)); do
+            padded_i=$(printf "%02d" $i)
+            forwarded_domain_name=FORWARD_DOMAIN_${padded_i}_NAME
+            forwarded_domain_ip=FORWARD_DOMAIN_${padded_i}_IP
+
+            cat <<EOF | silent sudo -u "${UNBOUND_USER}" tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
+forward-zone:
+  name: "${!forwarded_domain_name}"
+  forward-addr: ${!forwarded_domain_ip}
+EOF
+        done
 	fi
 }
 

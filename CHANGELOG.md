@@ -1,3 +1,9 @@
+## 2.6.3 2025-07-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add FORWARD_DOMAIN_XX_(NAME|IP) support to override specific domain names to use a specific nameserver instead of unbound
+
+
 ## 2.6.2 2025-04-24 <dave at tiredofit dot ca>
 
    ### Added
