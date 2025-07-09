@@ -63,7 +63,7 @@ create_configuration() {
         fi
         if [[ $(find "${ROOT_HINTS_FILE}" -mtime +30 -print) ]] ;  then
             print_notice "Root Hints are older than 30 days - Refreshing"
-            curl -sSL "${ROOT_HINTS_URI}" | sudo -u "${UNBOUND_USER}" tee "${ROOT_HINTS_FILE}"
+            curl -sSL "${ROOT_HINTS_URI}" | silent sudo -u "${UNBOUND_USER}" tee "${ROOT_HINTS_FILE}"
         fi
 
         chown -R "${UNBOUND_USER}" "${CONFIG_PATH}"
