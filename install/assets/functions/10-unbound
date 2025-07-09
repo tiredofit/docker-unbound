@@ -157,11 +157,13 @@ EOF
             padded_i=$(printf "%02d" $i)
             forwarded_domain_name=FORWARD_DOMAIN_${padded_i}_NAME
             forwarded_domain_ip=FORWARD_DOMAIN_${padded_i}_IP
-
+            forwarded_fallback=FORWARD_DOMAIN_${padded_i}_FALLBACK
+            forwarded_fallback_value="${!forwarded_fallback:-no}"
             cat <<EOF | silent sudo -u "${UNBOUND_USER}" tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
 forward-zone:
   name: "${!forwarded_domain_name}"
   forward-addr: ${!forwarded_domain_ip}
+  forward-first: ${forwarded_fallback_value}
 EOF
         done
 	fi

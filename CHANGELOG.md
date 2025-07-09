@@ -1,3 +1,9 @@
+## 2.7.0 2025-07-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Add FORWARD_DOMAIN_XX_FALLBACK (yes|no) to support falling back to unbound resolver if host does not respond
+
+
 ## 2.6.3 2025-07-09 <dave at tiredofit dot ca>
 
    ### Added
