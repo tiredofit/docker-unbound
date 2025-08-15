@@ -1,7 +1,16 @@
-#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
 
-configure_certificates() {
+unbound_bootstrap_filesystem() {
+    create_folder \
+                "${DATA_PATH},\
+                ${CONFIG_PATH}/,\
+                ${CUSTOM_CONFIG_PATH}" \
+                unbound:unbound 755
+}
 
+unbound_configure_certificates() {
     if [ ! -f "${TLS_SERVER_PATH}"/"${TLS_SERVER_CERT}" ] || [ ! -f "${TLS_SERVER_PATH}"/"${TLS_SERVER_KEY}" ] ; then
         print_debug "TLS: Creating Server Certificates"
         mkdir -p "${TLS_SERVER_PATH}"
@@ -53,20 +62,22 @@ EOF
     fi
 }
 
-create_configuration() {
-	if [ "${SETUP_TYPE,,}" = "auto" ]; then
+unbound_create_configuration() {
+	if [ "${UNBOUND_SETUP_TYPE,,}" = "auto" ]; then
         print_notice "Configuring Unbound"
-        mkdir -p "${CONFIG_PATH}"/conf.d
 
         if [ ! -f "${ROOT_HINTS_FILE}" ] ; then
-            cp -aR /assets/unbound/named.cache "${ROOT_HINTS_FILE}"
+            cp -aR /container/data/unbound/named.cache "${ROOT_HINTS_FILE}"
         fi
+
         if [[ $(find "${ROOT_HINTS_FILE}" -mtime +30 -print) ]] ;  then
             print_notice "Root Hints are older than 30 days - Refreshing"
             curl -sSL "${ROOT_HINTS_URI}" | silent sudo -u "${UNBOUND_USER}" tee "${ROOT_HINTS_FILE}"
         fi
 
-        chown -R "${UNBOUND_USER}" "${CONFIG_PATH}"
+        if var_true "${ENABLE_REMOTE_CONTROL}" ; then
+            unbound_configure_certificates
+        fi
 
         truefalse_yesno DENY_ANY
         truefalse_yesno ENABLE_IPV4
@@ -139,7 +150,7 @@ server:
     username: ${UNBOUND_USER}
     verbosity: ${LOG_LEVEL}
 
-    include: ${CONFIG_PATH}conf.d/*.conf
+    include: ${CUSTOM_CONFIG_PATH}/*.conf
 
 remote-control:
     control-enable: ${ENABLE_REMOTE_CONTROL}
@@ -162,28 +173,33 @@ EOF
             cat <<EOF | silent sudo -u "${UNBOUND_USER}" tee -a "${CONFIG_PATH}"/"${CONFIG_FILE}"
 forward-zone:
   name: "${!forwarded_domain_name}"
-  forward-addr: ${!forwarded_domain_ip}
+$(IFS=','; for ip in ${!forwarded_domain_ip}; do echo "  forward-addr: ${ip}"; done)
   forward-first: ${forwarded_fallback_value}
 EOF
         done
 	fi
 }
 
-configure_logging() {
-    if [ "${SETUP_TYPE,,}" = "auto" ]; then
+unbound_configure_logging() {
+    if [ "${UNBOUND_SETUP_TYPE,,}" = "auto" ]; then
         print_debug "Configuring Logging"
-        if [ "${LOG_TYPE,,}" = "file" ] ; then
-            mkdir -p "${LOG_PATH}"
-            touch "${LOG_PATH}"/"${LOG_FILE}"
-            chown -R "${UNBOUND_USER}": "${LOG_PATH}"
-            create_logrotate unbound "${LOG_PATH}"/"${LOG_FILE}" unbound unbound unbound
-            logfile="${LOG_PATH}/${LOG_FILE}"
-        else
-            logfile=""
-        fi
+        case "${LOG_TYPE,,}" in
+            file )
+                create_folder \
+                                "${LOG_PATH}" \
+                                unbound:unbound 755
+                create_logrotate unbound "${LOG_PATH}"/"${LOG_FILE}" unbound unbound unbound
+                logfile="${LOG_PATH}/${LOG_FILE}"
+            ;;
+            * )
+                logfile="${LOG_PATH}/${LOG_FILE}"
+            ;;
+        esac
 
-        ### Translate Logging
         case "${LOG_LEVEL,,}" in
+            info | 1 )
+                LOG_LEVEL=1
+            ;;
             detailed | 2 )
                 LOG_LEVEL=2
             ;;
@@ -203,13 +219,16 @@ configure_logging() {
     fi
 }
 
-configure_monitoring() {
-        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit-unbound.conf
+unbound_configure_monitoring() {
+    if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
+        source /container/base/defaults/defaults/*-monitoring
+        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/nfrastack-unbound.conf
 # Zabbix Unbound Configuration - Automatically Generated
-# Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-unbound
+# Find Companion Zabbix Server Templates at https://github.com/nfrastack/container-unbound
 # Autoregister=unbound
 
-UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c ${CONFIG_PATH}/${CONFIG_FILE} stats_noreset | sort
+UserParameter=unbound.get_statistics,echo \$(date) ; sudo unbound-control -c "${CONFIG_PATH}"/"${CONFIG_FILE}" stats_noreset | sort
 UserParameter=unbound.version,unbound -V | head -n1 | awk '{print \$2}'
 EOF
+    fi
 }

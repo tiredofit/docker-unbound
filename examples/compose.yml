@@ -1,16 +1,16 @@
 services:
 
   unbound-app:
-    image: tiredofit/unbound
+    image: docker.io/nfrastack/unbound
     container_name: unbound-app
     ports:
       - 53:53
     volumes:
-      - ./config:/config
+      - ./data:/data
       - ./logs:/logs
     environment:
+      - CONTAINER_NAME=unbound-app
       - TIMEZONE=America/Vancouver
-      - CONTAINER_NAME=unbound-hostname-app
     networks:
       - services
     restart: always

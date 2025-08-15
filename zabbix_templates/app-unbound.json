@@ -13,7 +13,7 @@
                 "uuid": "2d102a2aa1f642f5a3a84f7f679d4c72",
                 "template": "Unbound",
                 "name": "Unbound",
-                "description": "Unbound DNS Resolver\n\nThis template is meant specficially to be used with https://github.com/tiredofit/docker-unbound",
+                "description": "Unbound DNS Resolver\n\nThis template is meant specficially to be used with https://github.com/nfrastack/container-unbound",
                 "groups": [
                     {
                         "name": "Templates/Applications"

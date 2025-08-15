@@ -1,3 +1,22 @@
+## 3.0.0 2025-08-15 <dave at tiredofit dot ca>
+
+   ### Added
+      - Using base image nfrastack/container-base
+      - Alpine 3.22
+      - Compile with DNS Crypt, CacheDB (Redis) support
+      - Additional environment variables for custom config loading
+
+
+## 3.0.0 2025-08-15 <dave at tiredofit dot ca>
+
+Using base image nfrastack/container-base
+Alpine 3.22
+Compile with DNS Crypt, CacheDB (Redis) support
+Additional environment variables for custom config loading
+
+   ### Added
+
+
 ## 2.7.99 2025-08-15 <dave at tiredofit dot ca>
 
 Add EOL for tiredofit/unbound and notify of newer nfrastack/unbound image

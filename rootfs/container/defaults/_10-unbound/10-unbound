@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+set_env ACCESS_CONTROL_OUTGOING_PORT_PERMIT="10240-65535" nfrastack/clamav
+set_env BUFFER_SIZE_MSG="8192" nfrastack/clamav
+set_env CACHE_SIZE_EDNS="4096" nfrastack/clamav
+set_env CACHE_SIZE_MSG="32m" nfrastack/clamav
+set_env CACHE_SIZE_RRSET="64m" nfrastack/clamav
+set_env CACHE_SLABS_MSG="4" nfrastack/clamav
+set_env CACHE_TTL_MAX="86400" nfrastack/clamav
+set_env CACHE_TTL_MAX_NEGATIVE="10" nfrastack/clamav
+set_env CACHE_TTL_MIN="300" nfrastack/clamav
+set_env HARDEN_DNSSEC_STRIPPED="TRUE" nfrastack/clamav
+set_env HARDEN_GLUE="TRUE" nfrastack/clamav
+set_env HARDEN_LARGE_QUERIES="TRUE" nfrastack/clamav
+set_env HARDEN_SHORT_BUFFER_SIZE="TRUE" nfrastack/clamav
+set_env MINIMAL_RESPONSES="FALSE" nfrastack/clamav
+set_env NO_QUERY_LOCALHOST="FALSE" nfrastack/clamav
+set_env PREFETCH="TRUE" nfrastack/clamav
+set_env PREFETCH_KEY="TRUE" nfrastack/clamav
+set_env QNAME_MINIMIZATION="TRUE" nfrastack/clamav
+set_env SO_BUFFER_RECEIVE="" nfrastack/clamav
+set_env SO_BUFFER_SEND="" nfrastack/clamav
+set_env SO_REUSE_PORT="FALSE" nfrastack/clamav
+set_env TARGET_FETCH_POLICY="2 1 0 0 0 0" nfrastack/clamav
+set_env THREADS="1" nfrastack/clamav
+set_env THREADS_QUERIES_PER="1024" nfrastack/clamav
+set_env UNBOUND_USER="unbound" nfrastack/clamav

@@ -1,0 +1,15 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+prepare_service
+SERVICE_NAME="unbound"
+
+unbound_bootstrap_filesystem
+unbound_configure_monitoring
+unbound_configure_logging
+unbound_create_configuration
+
+liftoff
