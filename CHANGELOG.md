@@ -1,3 +1,8 @@
+## 2.7.99 2025-08-15 <dave at tiredofit dot ca>
+
+Add EOL for tiredofit/unbound and notify of newer nfrastack/unbound image
+
+
 ## 2.7.1 2025-07-16 <dave at tiredofit dot ca>
 
    ### Added
